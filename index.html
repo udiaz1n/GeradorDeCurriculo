@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Currículo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f9;
+            height: 100vh;
+            overflow: auto;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .curriculo,
+        .formulario {
+            display: none;
+        }
+
+        .curriculo.active,
+        .formulario.active {
+            display: block;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .field {
+            margin-bottom: 10px;
+        }
+
+        .field label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .field input,
+        .field textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .field button {
+            background-color: #2196F3;
+            color: white;
+            font-size: 14px;
+            padding: 6px 10px;
+            margin-top: 5px;
+        }
+
+        .curriculo .section {
+            margin-bottom: 30px;
+        }
+
+        .curriculo h2 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .curriculo p {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .curriculo ul {
+            padding-left: 20px;
+        }
+
+        .curriculo li {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .habilidades-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .habilidades-list li {
+            background-color: #f1f1f1;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .habilidades-list button {
+            background-color: red;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .email-field {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            align-items: center;
+        }
+
+        .email-field input {
+            border-radius: 15px;
+            padding: 5px 15px;
+            margin-right: 10px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        .email-field button {
+            background-color: #4caf50;
+            padding: 8px 16px;
+            border-radius: 15px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .curriculo-container {
+            padding: 30px;
+            width: 60%;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .curriculo-container h2 {
+            text-align: center;
+        }
+
+        .curriculo-container ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .curriculo-container ul li {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .curriculo-container .section {
+            margin-bottom: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .modal-content button {
+            background-color: #4caf50;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <button id="alterarDadosBtn" style="display: none;" onclick="voltarParaPreenchimento()">Alterar
+                Dados</button>
+        </div>
+
+        <div class="formulario active" id="preenchimento">
+            <div class="title">Preencha Seus Dados</div>
+
+            <div class="section">
+                <h3>Área de Atuação</h3>
+                <div class="field">
+                    <label for="areaAtuacao">Em qual área você está aplicando este currículo?</label>
+                    <input type="text" id="areaAtuacao" placeholder="Exemplo: Gastronomia">
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Informações Pessoais</h3>
+                <div class="field">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" placeholder="Seu nome">
+                </div>
+                <div class="field">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Seu email">
+                </div>
+                <div class="field">
+                    <label for="telefone">Telefone:</label>
+                    <input type="text" id="telefone" placeholder="Seu telefone">
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Objetivo</h3>
+                <div class="field">
+                    <textarea id="objetivo" placeholder="Seu objetivo profissional"></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Experiência</h3>
+                <div id="experiencias">
+                    <div class="field">
+                        <label for="cargo1">Cargo:</label>
+                        <input type="text" id="cargo1" placeholder="Cargo exercido">
+                    </div>
+                    <div class="field">
+                        <label for="empresa1">Empresa:</label>
+                        <input type="text" id="empresa1" placeholder="Empresa onde trabalhou">
+                    </div>
+                    <div class="field">
+                        <label for="ano1">Ano de Início:</label>
+                        <input type="text" id="ano1" placeholder="Ano de início">
+                    </div>
+                    <div class="field">
+                        <label for="anoFim1">Ano de Término:</label>
+                        <input type="text" id="anoFim1" placeholder="Ano de término">
+                    </div>
+                    <button onclick="adicionarExperiencia()">Adicionar Experiência</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Habilidades</h3>
+                <div class="field">
+                    <input type="text" id="habilidade" placeholder="Digite uma habilidade">
+                    <button onclick="adicionarHabilidade()">Adicionar Habilidade</button>
+                </div>
+                <ul id="listaHabilidades"></ul>
+            </div>
+
+            <div class="section">
+                <button onclick="gerarCurriculo()">Gerar Currículo</button>
+            </div>
+        </div>
+
+        <div class="curriculo" id="curriculo">
+            <div class="curriculo-container">
+                <h2 id="curriculoAreaAtuacao"></h2>
+                <div class="section">
+                    <h3>Informações Pessoais</h3>
+                    <p><strong>Nome:</strong> <span id="curriculoNomeInfo"></span></p>
+                    <p><strong>Email:</strong> <span id="curriculoEmail"></span></p>
+                    <p><strong>Telefone:</strong> <span id="curriculoTelefone"></span></p>
+                </div>
+
+                <div class="section">
+                    <h3>Objetivo</h3>
+                    <p id="curriculoObjetivo"></p>
+                </div>
+
+                <div class="section">
+                    <h3>Experiência</h3>
+                    <ul id="curriculoExperiencia"></ul>
+                </div>
+
+                <div class="section">
+                    <h3>Habilidades</h3>
+                    <ul id="curriculoHabilidades"></ul>
+                </div>
+            </div>
+
+            <div class="email-field">
+                <input type="email" id="emailEnvio" placeholder="Digite o email para envio">
+                <button onclick="enviarEmail()">Enviar por Email</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let experienciaCount = 1;
+        let habilidadeCount = 0;
+
+        function adicionarExperiencia() {
+            experienciaCount++;
+            const experienciaDiv = document.createElement('div');
+            experienciaDiv.innerHTML = `
+                <div class="field">
+                    <label for="cargo${experienciaCount}">Cargo:</label>
+                    <input type="text" id="cargo${experienciaCount}" placeholder="Cargo exercido">
+                </div>
+                <div class="field">
+                    <label for="empresa${experienciaCount}">Empresa:</label>
+                    <input type="text" id="empresa${experienciaCount}" placeholder="Empresa onde trabalhou">
+                </div>
+                <div class="field">
+                    <label for="ano${experienciaCount}">Ano de Início:</label>
+                    <input type="text" id="ano${experienciaCount}" placeholder="Ano de início">
+                </div>
+                <div class="field">
+                    <label for="anoFim${experienciaCount}">Ano de Término:</label>
+                    <input type="text" id="anoFim${experienciaCount}" placeholder="Ano de término">
+                </div>
+            `;
+            document.getElementById("experiencias").appendChild(experienciaDiv);
+        }
+
+        function adicionarHabilidade() {
+            const habilidade = document.getElementById("habilidade").value;
+            if (habilidade) {
+                habilidadeCount++;
+                const habilidadeItem = document.createElement('li');
+                habilidadeItem.innerHTML = `${habilidade} <button onclick="removerHabilidade(this)">Remover</button>`;
+                document.getElementById("listaHabilidades").appendChild(habilidadeItem);
+                document.getElementById("habilidade").value = "";
+            }
+        }
+
+        function removerHabilidade(button) {
+            button.parentElement.remove();
+        }
+
+        function gerarCurriculo() {
+            const nome = document.getElementById("nome").value;
+            const email = document.getElementById("email").value;
+            const telefone = document.getElementById("telefone").value;
+            const objetivo = document.getElementById("objetivo").value;
+            const areaAtuacao = document.getElementById("areaAtuacao").value;
+
+            let experiencias = [];
+            for (let i = 1; i <= experienciaCount; i++) {
+                const cargo = document.getElementById(`cargo${i}`);
+                const empresa = document.getElementById(`empresa${i}`);
+                const ano = document.getElementById(`ano${i}`);
+                const anoFim = document.getElementById(`anoFim${i}`);
+                if (cargo && empresa) {
+                    experiencias.push({
+                        cargo: cargo.value,
+                        empresa: empresa.value,
+                        anoInicio: ano.value,
+                        anoFim: anoFim.value
+                    });
+                }
+            }
+
+            let habilidades = [];
+            const habilidadesLista = document.getElementById("listaHabilidades").children;
+            for (let i = 0; i < habilidadesLista.length; i++) {
+                habilidades.push(habilidadesLista[i].innerText.split(' ')[0]);
+            }
+
+            document.getElementById("curriculoAreaAtuacao").textContent = areaAtuacao;
+            document.getElementById("curriculoNomeInfo").textContent = nome;
+            document.getElementById("curriculoEmail").textContent = email;
+            document.getElementById("curriculoTelefone").textContent = telefone;
+            document.getElementById("curriculoObjetivo").textContent = objetivo;
+
+            const expList = document.getElementById("curriculoExperiencia");
+            expList.innerHTML = '';
+            experiencias.forEach(exp => {
+                const li = document.createElement('li');
+                li.textContent = `${exp.cargo} - ${exp.empresa} (${exp.anoInicio} - ${exp.anoFim})`;
+                expList.appendChild(li);
+            });
+
+            const habilidadesList = document.getElementById("curriculoHabilidades");
+            habilidadesList.innerHTML = '';
+            habilidades.forEach(habilidade => {
+                const li = document.createElement('li');
+                li.textContent = habilidade;
+                habilidadesList.appendChild(li);
+            });
+
+            document.querySelector(".formulario").classList.remove("active");
+            document.querySelector(".curriculo").classList.add("active");
+            document.getElementById("alterarDadosBtn").style.display = "block";
+        }
+
+        function voltarParaPreenchimento() {
+            document.querySelector(".curriculo").classList.remove("active");
+            document.querySelector(".formulario").classList.add("active");
+            document.getElementById("alterarDadosBtn").style.display = "none";
+        }
+
+        function enviarEmail() {
+            const emailEnvio = document.getElementById("emailEnvio").value;
+            if (!emailEnvio) {
+                alert("Por favor, insira um e-mail válido!");
+                return;
+            }
+            alert("Currículo enviado com sucesso!");
+        }
+    </script>
+</body>
+</html>
