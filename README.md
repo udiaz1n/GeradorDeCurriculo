@@ -40,7 +40,15 @@ O projeto visa a praticidade do usuário, para que o mesmo não perca tempo abri
 
 
 
+Autor:
 
+David Dias
+
+Contato:
+
+Github: udiaz1n
+
+LinkedIn: https://www.linkedin.com/in/david-dias1/
 
 
 
